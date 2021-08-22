@@ -1,6 +1,7 @@
 version: '3'
 services:
   db:
+    container_name: postgres
     image: postgres
     ports:
       - "5432"
@@ -13,11 +14,21 @@ services:
   app:
     container_name: django
     build: ./django
-    command: python3 ./django/manage.py runserver 0.0.0.0:8000
-    working_dir: /code
-    ports:
-      - 18000:8000
+    command: uwsgi --socket :8001 --module mysite.wsgi --py-autoreload 1 --logto /tmp/mylog.log
+    expose:
+      - "8001"
     volumes:
-      - .:/code
+      - ./django:/code
     depends_on:
       - db
+  nginx:
+    container_name: nginx
+    image: nginx
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./nginx/conf:/etc/nginx/conf.d
+      - ./nginx/uwsgi_params:/etc/nginx/uwsgi_params
+      - ./static:/static
+    depends_on:
+      - app
