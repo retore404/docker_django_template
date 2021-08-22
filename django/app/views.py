@@ -8,6 +8,6 @@ def index(request):
     return HttpResponse("Hello, world. You're at the apps index.")
 
 def wait_event(request):
-    time.sleep(1)
-    return HttpResponse("This page is displayed after 1 second wait.")
+    time.sleep(5)
+    return HttpResponse("This page is displayed after 5 second wait.")
 
