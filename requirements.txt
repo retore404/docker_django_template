@@ -1,3 +1,4 @@
 Django>=3.0.8
 pytest
 pytest-django
+psycopg2
